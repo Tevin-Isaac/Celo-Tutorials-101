@@ -1,3 +1,5 @@
+# How to build a Bookshop Marketplace Dapp on Celo 
+
 ---
 title: How to build a Bookshop Marketplace Dapp 
 description: Learn how to build a bookshop marketplace platform on celo blockchain
@@ -10,8 +12,6 @@ tags: [solidity]
 hide_table_of_contents: false
 slug: /tutorials/how-to-build-a-bookshop-marketplace-dapp
 ---
-
-# How to build a Bookshop Marketplace Dapp on Celo 
 
 ## Introduction​
 
@@ -33,6 +33,7 @@ Celo is similar to Ethereum. Both networks run the Ethereum Virtual Machine (EVM
 ## Tutorial
 
 Here is a preview of what we are about to create.
+
 ![1_zspF9bqV7Z4m0_MsdyNbGQ](https://user-images.githubusercontent.com/81568615/206859476-c5f8f03c-b471-4442-9d31-2566b9bd5aa5.gif)
 
 ## Step 1: Creating our Smart Contract
@@ -42,6 +43,7 @@ First, we are going to build our smart contract and with this, you will be requi
 We are also going to use Remix as our IDE. Remix is mainly used to write Solidity contracts for Ethereum but can also be used to write Solidity contracts for Celo. The Remix IDE is an open-source tool that helps you write Solidity contracts in your browser.
 
 Click [here](https://remix.ethereum.org/) to open your remix IDE.
+
 ![1_Cz8GoBKaBuW5va1_0EBtWA](https://user-images.githubusercontent.com/81568615/206859320-d9c490d3-5807-42b6-94f3-ab12702060b2.gif)
 
 While the development of Celo on Remix is quite similar to Ethereum on Remix, there are some differences. The main difference is that you must use Celo or cUSD for transactions and gas costs instead of Ether. Additionally, you will deploy to the Celo blockchain and the Celo testnets, for example, the Alfajores testnet, instead of the Ethereum Blockchain or its testnets. To do that, you will use a Celo plugin for Remix, where you can compile, test, and deploy Solidity contracts for Celo.
@@ -171,11 +173,11 @@ contract Marketplace {
 }
 ```
 
-## Defining Our Smart Contract
+### Defining Our Smart Contract
 
 In reference to the smart contract above let us define the meaning of each structure on the smart contract and what it means.
 
-```solidty
+```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.7.0 <0.9.0;
 ```
@@ -184,7 +186,7 @@ In the first line, you specify the license the contract uses. Here is a comprehe
 
 On the next structure of the smart contract, it looks like this.
 
-```solidty
+```solidity
 interface IERC20Token {
     function transfer(address, uint256) external returns(bool);
 
@@ -202,7 +204,7 @@ interface IERC20Token {
 }
 ```
 
-## What is a Token?
+### What is a Token?
 
 Tokens can represent virtually anything in Ethereum:
 
@@ -216,11 +218,11 @@ Tokens can represent virtually anything in Ethereum:
 
 Such a powerful feature of Ethereum must be handled by a robust standard, right? That’s exactly where the ERC-20 plays its role! This standard allows developers to build token applications that are interoperable with other products and services.
 
-## What is ERC-20?
+### What is ERC-20?
 
 The ERC-20 introduces a standard for Fungible Tokens, in other words, they have a property that makes each Token be exactly the same (in type and value) as another Token. For example, an ERC-20 Token acts just like the ETH, meaning that 1 Token is and will always be equal to all the other Tokens.
 
-## Prerequisites
+### Prerequisites
 
 - [Accounts](https://ethereum.org/en/developers/docs/accounts)
 - [Smart Contracts](https://ethereum.org/en/developers/docs/smart-contracts/)
@@ -237,7 +239,7 @@ Example functionalities ERC-20 provides:
 
 If a Smart Contract implements the following methods and events it can be called an ERC-20 Token Contract and, once deployed, it will be responsible to keep track of the created tokens on Ethereum.
 
-## Interface
+### Interface
 
 Interfaces are similar to abstract contracts and are created using the interface keyword.
 
@@ -249,7 +251,7 @@ Characteristics of an interface.
 - Interface can not have state variables
 - Interface can have enums and structs which can be accessed using interface name dot notation.
 
-## Methods
+### Methods
 
 ```solidity
 function name() public view returns (string)
@@ -263,7 +265,7 @@ function approve(address _spender, uint256_value) public returns (bool success)
 function allowance(address _owner, address_spender) public view returns (uint256 remaining)
 ```
 
-## Events
+### Events
 
 ```solidity
 event Transfer(address indexed _from, address indexed_to, uint256_value)
@@ -331,7 +333,7 @@ Here it is below.
 
 <https://explorer.celo.org/alfajores/address/0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1/transactions>
 
-## Structs
+### Structs
 
 Structs are custom-defined types that can group several variables (see [Structs](https://docs.soliditylang.org/en/v0.8.17/types.html#structs) in the types section).
 
