@@ -1,5 +1,3 @@
-# How to build a Bookshop Marketplace Dapp on Celo 
-
 ---
 title: How to build a Bookshop Marketplace Dapp 
 description: Learn how to build a bookshop marketplace platform on celo blockchain
@@ -12,6 +10,8 @@ tags: [solidity]
 hide_table_of_contents: false
 slug: /tutorials/how-to-build-a-bookshop-marketplace-dapp
 ---
+
+# How to build a Bookshop Marketplace Dapp on Celo 
 
 ## Introduction​
 
