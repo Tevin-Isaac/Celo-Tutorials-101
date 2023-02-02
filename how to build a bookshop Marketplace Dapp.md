@@ -155,30 +155,12 @@ In reference to the smart contract above let us define the meaning of each struc
 
 ```solidty
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.7.0 <0.9.0;
+pragma solidity 0.8.16;
 ```
 
 In the first line, you specify the license the contract uses. Here is a comprehensive list of the available licenses <https://spdx.org/licenses/.So> remember the first line is always the license Identifier.
 
-On the next structure of the smart contract it looks like this.
-
-```solidty
-interface IERC20Token {
-    function transfer(address, uint256) external returns(bool);
-
-    function approve(address, uint256) external returns(bool);
-
-    function transferFrom(address, address, uint256) external returns(bool);
-
-    function totalSupply() external view returns(uint256);
-
-    function balanceOf(address) external view returns(uint256);
-
-    function allowance(address, address) external view returns(uint256);
-    event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(address indexed owner, address indexed spender, uint256 value);
-}
-```
+Now to the token we will be using for our marketplace
 
 ## What is a Token?
 
@@ -235,20 +217,24 @@ function symbol() public view returns (string)
 function decimals() public view returns (uint8)
 function totalSupply() public view returns (uint256)
 function balanceOf(address _owner) public view returns (uint256 balance)
-function transfer(address _to, uint256_value) public returns (bool success)
-function transferFrom(address _from, address_to, uint256_value) public returns (bool success)
-function approve(address _spender, uint256_value) public returns (bool success)
-function allowance(address _owner, address_spender) public view returns (uint256 remaining)
+function transfer(address _to, uint256 _value) public returns (bool success)
+function transferFrom(address _from, address _to, uint256 _value) public returns (bool success)
+function approve(address _spender, uint256 _value) public returns (bool success)
+function allowance(address _owner, address _spender) public view returns (uint256 remaining)
 ```
 
 ## Events
 
 ```solidity
-event Transfer(address indexed _from, address indexed_to, uint256_value)
-event Approval(address indexed _owner, address indexed_spender, uint256_value)
+event Transfer(address indexed _from, address indexed _to, uint256 _value)
+event Approval(address indexed _owner, address indexed _spender, uint256 _value)
 ```
 
-I hope you now have a basis of how an ERC20 token will always look like.
+I hope you now have a basis of how an ERC20 token will always look like. But in our case we are going to be using only two method in out interface
+```solidity
+function approve(address _spender, uint256 _value) public returns (bool success)
+function transferFrom(address _from, address _to, uint256_value) public returns (bool success)
+```
 
 Next on our smart contract code is this line :
 
