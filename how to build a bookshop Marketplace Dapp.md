@@ -55,46 +55,18 @@ Our Overall `marketplace.sol` smart contract will look like this:
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity >= 0.7 .0 < 0.9 .0;
+pragma solidity 0.8.16;
 interface IERC20Token {
-    function transfer(address, uint256) external returns(bool);
-
-    function approve(address, uint256) external returns(bool);
-
     function transferFrom(address, address, uint256) external returns(bool);
-
-    function totalSupply() external view returns(uint256);
-
-    function balanceOf(address) external view returns(uint256);
-
-    function allowance(address, address) external view returns(uint256);
-    event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(address indexed owner, address indexed spender, uint256 value);
+    function approve(address, uint256) external returns(bool);
 }
-library SafeMath {
-    /**
-     * @dev Returns the addition of two unsigned integers, reverting on
-     * overflow.
-     *
-     * Counterpart to Solidity's `+` operator.
-     *
-     * Requirements:
-     *
-     * -- Addition cannot overflow.
-     */
-    function add(uint256 a, uint256 b) internal pure returns(uint256) {
-        uint256 c = a + b;
-        require(c >= a, "SafeMath: addition overflow");
-        return c;
-    }
-}
+
 contract Marketplace {
     uint internal productsLength = 0;
     address internal cUsdTokenAddress = 0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1;
     address public adminAddress;
 
-    using SafeMath
-    for uint;
+
     struct Product {
         address payable owner;
         string name;
@@ -116,7 +88,7 @@ contract Marketplace {
         require(msg.sender == adminAddress, "only callable by admin");
         _;
     }
-    mapping(uint => Product) public products;
+    mapping(uint => Product) products;
 
     function writeProduct(
         string memory _name,
@@ -141,27 +113,33 @@ contract Marketplace {
             _sold,
             _verified
         );
-        productsLength = productsLength.add(1);
+        productsLength++;
     }
 
-    function buyProduct(uint _index) public payable isVerified(_index) {
-        require(products[_index].owner != address(0), "enter a valid product index");
+    function buyProduct(uint _index) public isVerified(_index) {
+        Product memory PR = products[_index]; // local caching for code optimizing
+        require(PR.owner != address(0), "enter a valid product index");
         require(
             IERC20Token(cUsdTokenAddress).transferFrom(
                 msg.sender,
-                products[_index].owner,
-                products[_index].price
+                PR.owner,
+                PR.price
             ),
             "Transfer failed."
         );
-        products[_index].sold = products[_index].sold.add(1);
+        PR.sold = PR.sold + 1;
     }
 
     function getProductsLength() public view returns(uint) {
         return (productsLength);
     }
+    function viewProduct(uint _index) public view returns(Product memory getProduct) {
+        require(_index < productsLength, "Product index does not exit");
+        getProduct = products[_index];
+    }
     // admin can verify a product
     function verifyProduct(uint _index) public isAdmin {
+        require(_index < productsLength, "Product index does not exit");
         products[_index].verified = true;
     }
 
