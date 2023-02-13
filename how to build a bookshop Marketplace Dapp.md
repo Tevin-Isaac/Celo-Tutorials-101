@@ -58,45 +58,17 @@ Our Overall `marketplace.sol` smart contract will look like this:
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity >= 0.7 .0 < 0.9 .0;
+pragma solidity 0.8.16;
 interface IERC20Token {
-    function transfer(address, uint256) external returns(bool);
-
-    function approve(address, uint256) external returns(bool);
-
     function transferFrom(address, address, uint256) external returns(bool);
-
-    function totalSupply() external view returns(uint256);
-
-    function balanceOf(address) external view returns(uint256);
-
-    function allowance(address, address) external view returns(uint256);
-    event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(address indexed owner, address indexed spender, uint256 value);
+    function approve(address, uint256) external returns(bool);
 }
-library SafeMath {
-    /**
-     * @dev Returns the addition of two unsigned integers, reverting on
-     * overflow.
-     *
-     * Counterpart to Solidity's `+` operator.
-     *
-     * Requirements:
-     *
-     * -- Addition cannot overflow.
-     */
-    function add(uint256 a, uint256 b) internal pure returns(uint256) {
-        uint256 c = a + b;
-        require(c >= a, "SafeMath: addition overflow");
-        return c;
-    }
-}
+
 contract Marketplace {
     uint internal productsLength = 0;
     address internal cUsdTokenAddress = 0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1;
     address public adminAddress;
 
-    using SafeMath for uint;
     struct Product {
         address payable owner;
         string name;
@@ -118,7 +90,7 @@ contract Marketplace {
         require(msg.sender == adminAddress, "only callable by admin");
         _;
     }
-    mapping(uint => Product) public products;
+    mapping(uint => Product) products;
 
     function writeProduct(
         string memory _name,
@@ -143,27 +115,33 @@ contract Marketplace {
             _sold,
             _verified
         );
-        productsLength = productsLength.add(1);
+        productsLength++;
     }
 
-    function buyProduct(uint _index) public payable isVerified(_index) {
-        require(products[_index].owner != address(0), "enter a valid product index");
+    function buyProduct(uint _index) public isVerified(_index) {
+        Product memory PR = products[_index]; // local caching for code optimizing
+        require(PR.owner != address(0), "enter a valid product index");
         require(
             IERC20Token(cUsdTokenAddress).transferFrom(
                 msg.sender,
-                products[_index].owner,
-                products[_index].price
+                PR.owner,
+                PR.price
             ),
             "Transfer failed."
         );
-        products[_index].sold = products[_index].sold.add(1);
+        PR.sold = PR.sold + 1;
     }
 
     function getProductsLength() public view returns(uint) {
         return (productsLength);
     }
+    function viewProduct(uint _index) public view returns(Product memory getProduct) {
+        require(_index < productsLength, "Product index does not exit");
+        getProduct = products[_index];
+    }
     // admin can verify a product
     function verifyProduct(uint _index) public isAdmin {
+        require(_index < productsLength, "Product index does not exit");
         products[_index].verified = true;
     }
 
@@ -179,30 +157,12 @@ In reference to the smart contract above let us define the meaning of each struc
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.7.0 <0.9.0;
+pragma solidity 0.8.16;
 ```
 
 In the first line, you specify the license the contract uses. Here is a comprehensive list of the available licenses <https://spdx.org/licenses/.So> remember the first line is always the license Identifier.
 
-On the next structure of the smart contract, it looks like this.
 
-```solidity
-interface IERC20Token {
-    function transfer(address, uint256) external returns(bool);
-
-    function approve(address, uint256) external returns(bool);
-
-    function transferFrom(address, address, uint256) external returns(bool);
-
-    function totalSupply() external view returns(uint256);
-
-    function balanceOf(address) external view returns(uint256);
-
-    function allowance(address, address) external view returns(uint256);
-    event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(address indexed owner, address indexed spender, uint256 value);
-}
-```
 
 ### What is a Token?
 
@@ -259,20 +219,19 @@ function symbol() public view returns (string)
 function decimals() public view returns (uint8)
 function totalSupply() public view returns (uint256)
 function balanceOf(address _owner) public view returns (uint256 balance)
-function transfer(address _to, uint256_value) public returns (bool success)
-function transferFrom(address _from, address_to, uint256_value) public returns (bool success)
-function approve(address _spender, uint256_value) public returns (bool success)
-function allowance(address _owner, address_spender) public view returns (uint256 remaining)
+function transfer(address _to, uint256 _value) public returns (bool success)
+function transferFrom(address _from, address _to, uint256 _value) public returns (bool success)
+function approve(address _spender, uint256 _value) public returns (bool success)
+function allowance(address _owner, address _spender) public view returns (uint256 remaining)
 ```
 
 ### Events
 
 ```solidity
-event Transfer(address indexed _from, address indexed_to, uint256_value)
-event Approval(address indexed _owner, address indexed_spender, uint256_value)
+event Transfer(address indexed _from, address indexed _to, uint256 _value)
+event Approval(address indexed _owner, address indexed _spender, uint256 _value)
 ```
 
-I hope you now have a basis of what an ERC20 token will always look like.
 
 Next on our smart contract code is this line :
 
