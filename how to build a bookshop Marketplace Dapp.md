@@ -60,10 +60,16 @@ Our Overall `marketplace.sol` smart contract will look like this:
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.16;
 interface IERC20Token {
-    function transferFrom(address, address, uint256) external returns(bool);
-    function approve(address, uint256) external returns(bool);
-}
+    function transfer(address, uint256) external returns (bool);
+    function approve(address, uint256) external returns (bool);
+    function transferFrom(address, address, uint256) external returns (bool);
+    function totalSupply() external view returns (uint256);
+    function balanceOf(address) external view returns (uint256);
+    function allowance(address, address) external view returns (uint256);
 
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+}
 contract Marketplace {
     uint internal productsLength = 0;
     address internal cUsdTokenAddress = 0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1;
@@ -115,7 +121,7 @@ contract Marketplace {
             _sold,
             _verified
         );
-        productsLength++;
+         products[_index].sold = products[_index].sold.add(1);
     }
 
     function buyProduct(uint _index) public isVerified(_index) {
